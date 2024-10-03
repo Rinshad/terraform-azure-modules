@@ -23,12 +23,6 @@ variable "address_prefixes" {
   type        = list(string)
 }
 
-variable "private_endpoint_network_policies_enabled" {
-  description = "If the private endpoint network policies are enabled."
-  type        = bool
-  default     = true
-}
-
 variable "private_link_service_network_policies_enabled" {
   description = "If the privae link services network policies are enabled."
   type        = bool
