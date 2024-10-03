@@ -60,7 +60,4 @@ resource "azurerm_kubernetes_cluster" "aks" {
     pod_cidr           = var.net_profile_pod_cidr
     service_cidr       = var.net_profile_service_cidr
   }
-
-
-  depends_on = [azurerm_virtual_network.vnet, azurerm_subnet.aks_subnet]
 }
