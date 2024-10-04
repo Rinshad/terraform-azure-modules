@@ -109,12 +109,6 @@ variable "agents_size" {
   default     = "Standard_D2s_v3"
 }
 
-variable "enable_host_encryption" {
-  type        = bool
-  description = "Enable Host Encryption for default node pool. Encryption at host feature must be enabled on the subscription: https://docs.microsoft.com/azure/virtual-machines/linux/disks-enable-host-based-encryption-cli"
-  default     = false
-}
-
 variable "temporary_name_for_rotation" {
   type        = string
   description = "Specifies the name of the temporary node pool used to cycle the default node pool for VM resizing."
@@ -124,12 +118,6 @@ variable "temporary_name_for_rotation" {
 variable "enable_node_public_ip" {
   type        = bool
   description = "(Optional) Should nodes in this Node Pool have a Public IP Address? Defaults to false."
-  default     = false
-}
-
-variable "enable_auto_scaling" {
-  type        = bool
-  description = "Enable node pool autoscaling"
   default     = false
 }
 
@@ -202,5 +190,63 @@ variable "vnet_subnet_id" {
 variable "agents_availability_zones" {
   type        = list(string)
   description = "(Optional) A list of Availability Zones across which the Node Pool should be spread. Changing this forces a new resource to be created."
+  default     = null
+}
+variable "agents_max_count" {
+  type        = number
+  description = "Maximum number of nodes in a pool"
+  default     = null
+}
+variable "agents_min_count" {
+  type        = number
+  description = "Minimum number of nodes in a pool"
+  default     = null
+}
+variable "upgarde_max_surge" {
+  description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."
+  type        = number
+  default     = 1
+}
+
+variable "network_plugin" {
+  type        = string
+  description = "Network plugin to use for networking."
+  default     = "kubenet"
+  nullable    = false
+}
+
+variable "net_profile_dns_service_ip" {
+  type        = string
+  description = "(Optional) IP address within the Kubernetes service address range that will be used by cluster service discovery (kube-dns). Changing this forces a new resource to be created."
+  default     = null
+}
+
+variable "network_policy" {
+  type        = string
+  description = " (Optional) Sets up network policy to be used with Azure CNI. Network policy allows us to control the traffic flow between pods. Currently supported values are calico and azure. Changing this forces a new resource to be created."
+  default     = "calico"
+}
+
+variable "net_profile_outbound_type" {
+  type        = string
+  description = "(Optional) The outbound (egress) routing method which should be used for this Kubernetes Cluster. Possible values are loadBalancer and userDefinedRouting. Defaults to loadBalancer."
+  default     = "loadBalancer"
+}
+
+variable "net_profile_pod_cidr" {
+  type        = string
+  description = " (Optional) The CIDR to use for pod IP addresses. This field can only be set when network_plugin is set to kubenet. Changing this forces a new resource to be created."
+  default     = null
+}
+
+variable "net_profile_service_cidr" {
+  type        = string
+  description = "(Optional) The Network Range used by the Kubernetes service. Changing this forces a new resource to be created."
+  default     = null
+}
+
+variable "authorized_ip_ranges" {
+  type        = set(string)
+  description = "(Optional) The IP ranges to allow for incoming traffic to the server nodes."
   default     = null
 }
