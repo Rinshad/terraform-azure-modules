@@ -3,7 +3,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                            = var.location
   resource_group_name                 = var.resource_group_name
   dns_prefix                          = var.name
-  api_server_authorized_ip_ranges     = var.api_server_authorized_ip_ranges
   azure_policy_enabled                = var.azure_policy_enabled
   disk_encryption_set_id              = var.disk_encryption_set_id
   http_application_routing_enabled    = var.http_application_routing_enabled
@@ -11,7 +10,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   local_account_disabled              = var.local_account_disabled
   node_resource_group                 = var.node_resource_group
   oidc_issuer_enabled                 = var.oidc_issuer_enabled
-  open_service_mesh_enabled           = var.open_service_mesh_enabled
   private_cluster_enabled             = var.private_cluster_enabled
   private_cluster_public_fqdn_enabled = var.private_cluster_public_fqdn_enabled
   private_dns_zone_id                 = var.private_dns_zone_id
@@ -24,13 +22,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     default_node_pool {
     name                         = var.agents_pool_name
     vm_size                      = var.agents_size
-    enable_auto_scaling          = var.enable_auto_scaling
-    enable_host_encryption       = var.enable_host_encryption
     temporary_name_for_rotation  = var.temporary_name_for_rotation
-    enable_node_public_ip        = var.enable_node_public_ip
-    max_count                    = var.enable_auto_scaling ? var.agents_max_count : null
+    max_count                    = var.agents_max_count
+    min_count                    = var.agents_min_count
     max_pods                     = var.agents_max_pods
-    min_count                    = var.enable_auto_scaling ? var.agents_min_count : null
     node_count                   = var.agents_count
     node_labels                  = var.agents_labels
     only_critical_addons_enabled = var.only_critical_addons_enabled
@@ -54,10 +49,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
  network_profile {
     network_plugin     = var.network_plugin
     dns_service_ip     = var.net_profile_dns_service_ip
-    docker_bridge_cidr = var.net_profile_docker_bridge_cidr
     network_policy     = var.network_policy
     outbound_type      = var.net_profile_outbound_type
     pod_cidr           = var.net_profile_pod_cidr
     service_cidr       = var.net_profile_service_cidr
+  }
+
+  api_server_access_profile {
+    authorized_ip_ranges = var.authorized_ip_ranges 
+  }
+
+  auto_scaler_profile {
+
   }
 }
